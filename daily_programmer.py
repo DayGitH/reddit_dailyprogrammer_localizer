@@ -9,6 +9,7 @@ MIN_TIMESTAMP = 86400
 
 
 def parse_date(date):
+    """Returns input dates to required formats. Edge cases without recognized formats are returned differently."""
     frmts = ('%Y-%m-%d', '%m/%d/%Y', '%m/%d/%y', '%d/%m/%Y', '%d/%#m/%y')
     for f in frmts:
         try:
@@ -21,6 +22,11 @@ def parse_date(date):
 
 
 def create_title(title, n=[0]):
+    """
+    Takes the original title of the post and formats it according to a consistent standard.
+    Most posts should return 'DP' followed by date followed by a letter indicating type of post. Date format is
+    dictated by parse_date function. Post types: A: easy, B: intermediate, C: hard, W: weekly, M: monthly
+    """
     results = []
     catcher = False
     new_title = ''
@@ -67,6 +73,7 @@ def create_title(title, n=[0]):
 
 
 def content_wrap(text):
+    """Wraps the content of the post to wrap like a word processor would."""
     length = 120
     result = []
     for i in text.split('\n'):
@@ -88,6 +95,7 @@ def content_wrap(text):
 
 
 def create_file(p, start_time=0):
+    """Creates .py file with original title, URL and post contents inside, with a ready to go main function in place."""
     title = p.title
     filename = create_title(title)
     if not filename:
@@ -116,6 +124,7 @@ def create_file(p, start_time=0):
 
 
 def get_latest_file_time(reddit):
+    """Returns the timestamp of the the newest previously created file."""
     file_list = sorted(os.listdir('.'), reverse=True)
     for file in file_list:
         if file.startswith('DP') and file.endswith('.py') and '_' not in file:
